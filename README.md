@@ -2,6 +2,8 @@
 
 This is a loan acquisition sign up form. Being creative I took a liberty of adding a Neon (Postgres) database and a mocked Salesforce API integration. So that form can be seen in action from end to end. This document describes the design process, data modelling, choices, and more implementation details.
 
+Link to the project: [application demo](https://loan-application-demo-eta.vercel.app/) but you'll need be in dev mode to see the OTP. Please follow development setup to run the project locally.
+
 It has multi-step form with validation. Form handle the state and validation using React Hook Form. Here are some of the things you need to know about this project.
 
 - All types are kept in `lib/types.ts` file.
@@ -29,7 +31,7 @@ It has multi-step form with validation. Form handle the state and validation usi
   - Form library that can be used to handle the form state and validation.
   - Will help use to handle the form state and validation.
 
-## Installation and Setup
+## Development Setup
 
 To run the project locally, clone the repository and run:
 `npm install`
@@ -38,17 +40,19 @@ Go to [neon.tech](https://neon.tech) and create a new database and get the conne
 Create a `.env` file in the root directory and add the following.
 
 ```
-DATABASE_URL=postgresql://<username>:<password>@<host>:<port>/<database_name>
+DATABASE_URL="<CONNECTION_STRING_FROM_NEON>"
 ```
 
+Run `npx prisma generate`
+Run `npx prisma migrate dev --name init`
+
 And run `npm run dev` to start the project.
+
+Project will now start. You can view application in browser at `http://localhost:3000`.
 
 If you need to change the database schema, you can use Prisma to do so.
 `npx prisma migrate dev --name <migration_name>`
 `npx prisma db push`
-
-Drop development database:
-`npx prisma migrate reset --force`
 
 ## Key features
 
