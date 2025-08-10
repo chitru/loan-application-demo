@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums for type safety
+enum LoanType {
+  PERSONAL
+  BUSINESS
+  EDUCATION
+  AUTO
+  HOME
+  DEBT_CONSOLIDATION
+  OTHER
+}
+
+enum LeadStatus {
+  SUBMITTED
+  VERIFIED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum FunnelStage {
+  LEAD
+  APPLICANT
+  CUSTOMER
+}
+
+enum LogStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum VerificationType {
+  EMAIL
+  PHONE
+}
+
+// Main Lead table
+model Lead {
+  id          String      @id @default(uuid())
+  fname       String
+  mname       String? // Optional middle name
+  lname       String
+  email       String      @unique
+  phone       String
+  dob         DateTime
+  state       String
+  postcode    Int
+  loanAmount  Decimal     @db.Decimal(10, 2) // For currency precision
+  loanType    LoanType
+  status      LeadStatus  @default(SUBMITTED)
+  funnelStage FunnelStage @default(LEAD)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  metadata     LeadMetadata[]
+  logs         Log[]
+  verification Verification[]
+
+  @@map("leads")
+}
+
+// Lead Metadata for tracking session and device info
+model LeadMetadata {
+  id          String   @id @default(uuid())
+  leadId      String
+  ipAddress   String?
+  userAgent   String?
+  referrerUrl String?
+  pagePath    String?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@map("lead_metadata")
+}
+
+// Logs for external system integration tracking
+model Log {
+  id           String    @id @default(uuid())
+  leadId       String
+  system       String // e.g., "salesforce"
+  status       LogStatus
+  responseCode Int?
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@map("logs")
+}
+
+// Verification for email/phone verification
+model Verification {
+  id         String           @id @default(uuid())
+  leadId     String
+  type       VerificationType
+  token      String           @unique
+  expiresAt  DateTime
+  verifiedAt DateTime?
+  createdAt  DateTime         @default(now())
+
+  // Relations
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@map("verifications")
+}
