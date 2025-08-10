@@ -169,7 +169,7 @@ export async function PUT(request: NextRequest) {
       success: true,
       message: "New verification code sent!",
       // just kept it here so we can see OTP in vercel prod env for demo purposes
-      ...(process.env.NODE_ENV === "production" && { otp }),
+      ...(process.env.NODE_ENV === "development" && { otp }),
     });
   } catch (error) {
     console.error("Error resending OTP:", error);
