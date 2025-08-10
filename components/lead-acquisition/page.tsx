@@ -89,6 +89,7 @@ export default function LeadAcq() {
             if (result.otp) {
               setServerOtp(result.otp);
               console.log("Development OTP received:", result.otp);
+              toast.success("OTP received. Please verify it." + result.otp);
             }
 
             setCurrentStep(currentStep + 1);

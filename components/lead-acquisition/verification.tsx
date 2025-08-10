@@ -51,21 +51,22 @@ export default function Verification({
         </div>
 
         {/* Development OTP Display, delete this after email setup is complete */}
-        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <div className="text-sm font-medium text-green-800 mb-2">
-            Development Mode - Server Generated OTP
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-mono font-bold text-green-700 bg-green-100 px-4 py-2 rounded border">
-              {serverOtp || "Waiting for OTP..."}
+        {process.env.NODE_ENV === "development" && (
+          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="text-sm font-medium text-green-800 mb-2">
+              Development Mode - Server Generated OTP
             </div>
+            <div className="text-center">
+              <div className="text-2xl font-mono font-bold text-green-700 bg-green-100 px-4 py-2 rounded border">
+                {serverOtp || "Waiting for OTP..."}
+              </div>
+            </div>
+            <p className="text-green-600 text-xs mt-2 text-center">
+              This OTP was generated on the server and will be hidden in
+              production. It is valid for 10 minutes.
+            </p>
           </div>
-          <p className="text-green-600 text-xs mt-2 text-center">
-            This OTP was generated on the server and for demo purpose only. It
-            is valid for 10 minutes. Please delete this after email setup is
-            complete.
-          </p>
-        </div>
+        )}
       </div>
     </div>
   );
