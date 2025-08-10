@@ -48,6 +48,11 @@ export default function Verification({
           >
             Didn&apos;t receive the code? Resend
           </button>
+          <div>
+            <p className="text-green-600 text-xs mt-2 text-center">
+              OTP is only visible in development mode.
+            </p>
+          </div>
         </div>
 
         {/* Development OTP Display, delete this after email setup is complete */}
